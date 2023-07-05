@@ -8,7 +8,9 @@
     "start": "node backend/index.js",
     "server": "nodemon backend/index.js",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +19,10 @@
   },
   "homepage": "https://github.com/Mohdimran07/E-commerce#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "express": "^4.18.2",
+    "mongoose": "^7.3.1"
   },
   "devDependencies": {
     "concurrently": "^8.2.0",
