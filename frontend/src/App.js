@@ -9,7 +9,6 @@ function App() {
       <Header />
       <main>
         <Container>
-          <h1>Welcome to E-commerce</h1>
           <Outlet />
         </Container>
       </main>
