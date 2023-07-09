@@ -1,5 +1,3 @@
-import React, { useEffect } from "react";
-
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import { useGetProductsQuery } from "../slices/productsApiSlices";
@@ -9,16 +7,6 @@ import Message from "../components/Message";
 const HomeScreen = () => {
   const { data: products, isLoading, error } = useGetProductsQuery();
 
-  // const [products, setProducts] = useState();
-
-  useEffect(() => {
-    // const fetchProducts = async () => {
-    //   const { data } = await axios.get("/api/products");
-    //   console.log(data);
-    //   setProducts(data);
-    // };
-    // fetchProducts();
-  }, []);
   return (
     <>
       {isLoading ? (
