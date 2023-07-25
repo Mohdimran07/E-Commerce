@@ -1,14 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  Row,
-  Col,
-  Form,
-  ListGroup,
-  Image,
-  Button,
-  Card,
-} from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
@@ -18,6 +10,7 @@ import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
+  useDeliverOrderMutation,
 } from "../slices/orderApiSlice";
 
 const OrderScreen = () => {
@@ -28,7 +21,10 @@ const OrderScreen = () => {
     isLoading,
     error,
   } = useGetOrderDetailsQuery(orderId);
-  
+
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
+
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const {
@@ -36,8 +32,8 @@ const OrderScreen = () => {
     isLoading: loadingPayPal,
     error: errorPayPal,
   } = useGetPayPalClientIdQuery();
-  console.log(order)
-  console.log(paypal)
+  console.log(order);
+  console.log(paypal);
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -47,7 +43,7 @@ const OrderScreen = () => {
           type: "resetOptions",
           value: {
             "client-id": paypal.clientId,
-            currency: 'INR',
+            currency: "INR",
           },
         });
         paypalDispatch({ type: "setLoadingStatus", value: "pending" });
@@ -55,7 +51,7 @@ const OrderScreen = () => {
       if (order && !order.isPaid) {
         if (!window.paypal) {
           loadPayPalScript();
-          console.log("running....")
+          console.log("running....");
         }
       }
     }
@@ -96,10 +92,16 @@ const OrderScreen = () => {
         ],
       })
       .then((orderID) => {
-        console.log(orderID)
+        console.log(orderID);
         return orderID;
       });
   }
+
+  const deliverHandler = async () => {
+    await deliverOrder(orderId);
+    refetch();
+    toast.success('Order Delivered')
+  };
 
   return isLoading ? (
     <Loader />
@@ -235,6 +237,23 @@ const OrderScreen = () => {
                   </ListGroup.Item>
                 )}
               </ListGroup.Item>
+
+              {loadingDeliver && <Loader />}
+
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
