@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/uploads", uploadRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.post("/api/payment", async (req, res) => {
   const { token, amount } = req.body;
