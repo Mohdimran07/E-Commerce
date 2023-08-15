@@ -28,11 +28,20 @@ import AdminRoute from "./components/AdminRoute";
 import OrderLists from "./screens/admin/OrderLists";
 import ProductListScreen from "./screens/admin/ProductListScreen";
 import EditScreen from "./screens/admin/EditScreen";
+import UserListScreen from "./screens/admin/UserListScreen";
+import UserEditScreen from "./screens/admin/UserEditScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<HomeScreen />}></Route>
+      <Route index path="/search/:keyword" element={<HomeScreen />}></Route>
+      <Route index path="/page/:pageNumber" element={<HomeScreen />}></Route>
+      <Route
+        index
+        path="/search/:keyword/page/:pageNumber"
+        element={<HomeScreen />}
+      ></Route>
       <Route path="product/:id" element={<ProductScreen />}></Route>
       <Route path="cart" element={<CartScreen />}></Route>
       <Route path="login" element={<LoginScreen />} />
@@ -47,7 +56,13 @@ const router = createBrowserRouter(
       <Route path="" element={<AdminRoute />}>
         <Route path="/admin/orderlist" element={<OrderLists />} />
         <Route path="/admin/productlist" element={<ProductListScreen />} />
+        <Route
+          path="/admin/productlist/:pageNumber"
+          element={<ProductListScreen />}
+        />
         <Route path="/admin/product/:id/edit" element={<EditScreen />} />
+        <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
+        <Route path="/admin/userList" element={<UserListScreen />} />
       </Route>
     </Route>
   )

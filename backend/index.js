@@ -24,10 +24,17 @@ app.use(express.urlencoded({ extended: true }));
 
 // Cookie parser middleware
 app.use(cookieParser());
+// custom middleware create
+const LoggerMiddleware = (req,res,next) =>{
+  console.log(`Logged  ${req.url}  ${req.method} -- ${new Date()}`)
+  next();
+}
 
 app.get("/", (req, res) => {
   res.send("server running...");
 });
+// application level middleware
+app.use(LoggerMiddleware);
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
