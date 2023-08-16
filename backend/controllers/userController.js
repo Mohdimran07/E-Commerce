@@ -1,6 +1,5 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
-import jwt from "jsonwebtoken";
 import generateToken from "../utilis/generateToken.js";
 
 const authUser = asyncHandler(async (req, res) => {
@@ -8,13 +7,14 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    generateToken(res, user._id);
+    
 
     res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      token : generateToken(res, user._id)
     });
   } else {
     res.status(401);

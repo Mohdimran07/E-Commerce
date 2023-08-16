@@ -25,10 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 // Cookie parser middleware
 app.use(cookieParser());
 // custom middleware create
-const LoggerMiddleware = (req,res,next) =>{
-  console.log(`Logged  ${req.url}  ${req.method} -- ${new Date()}`)
+const LoggerMiddleware = (req, res, next) => {
+  console.log(`Logged  ${req.url}  ${req.method} -- ${new Date()}`);
   next();
-}
+};
 
 app.get("/", (req, res) => {
   res.send("server running...");
@@ -41,25 +41,26 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 
-app.post("/api/payment", async (req, res) => {
-  const { token, amount } = req.body;
-
-  try {
-    const charge = await stripe.charges.create({
-      amount,
-      currency: "INR",
-      description: "Payment description",
-      source: token.id,
-    });
-
-    // Handle successful payment
-    console.log(charge);
-    res.status(200).json({ message: "Payment successful" });
-  } catch (error) {
-    // Handle failed payment
-    console.log(error);
-    res.status(500).json({ message: "Payment failed" });
-  }
+app.post("/api/create-checkout-session", async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: "T-shirt",
+          },
+          unit_amount: 2000,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: "http://localhost:3000",
+    cancel_url: "http://localhost:3000/cancel",
+  });
+  console.log(res)
+  res.json({ url: session.url });
 });
 
 const __dirname = path.resolve();
